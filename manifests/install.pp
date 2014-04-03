@@ -1,3 +1,7 @@
+# Class artifactory::install
+#
+# Manages the download and installation of Artifactory
+#
 class artifactory::install inherits artifactory::config {
 
   Exec {
