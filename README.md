@@ -7,13 +7,13 @@ Customization of the installation can be handled with the artifactory::config cl
 
 ```
 class { 'artifactory::config' :
-  version       => '3.2.0',
-  user          => 'artifact',
-  group         => 'artifact',
-  port          => 8082,
-  manage_java   => true,
-  java_package  => 'openjdk-7-jdk'
-  manage_war    => false,
+  $version       => '3.2.0',
+  $user          => 'artifact',
+  $group         => 'artifact',
+  $port          => 8082,
+  $manage_java   => true,
+  $java_package  => 'openjdk-7-jdk'
+  $manage_war    => false,
   $war_location = '',
 }
 
