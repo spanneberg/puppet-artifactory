@@ -2,7 +2,7 @@
 #
 # Parameters:
 #
-# version = '3.2.0' (default)
+# version = '3.5.2.1' (default)
 #   The Artifactory version to download and install
 #
 # destination = '/opt' (default)
@@ -34,7 +34,7 @@
 #
 
 class artifactory::config(
-  $version      = '3.2.0',
+  $version      = '3.5.2.1',
   $destination  = '/opt',
   $user         = 'artifactory',
   $group        = 'artifactory',
