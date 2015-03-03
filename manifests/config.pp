@@ -25,6 +25,14 @@
 # java_package = 'openjdk-7-jre' (default)
 #   The package that will be managed if $manage_java is set to true.
 #
+# manage_war = false (default)
+#   Wether the module should also manage a Powerpack/HA war or not.
+#   The war given in $powerpack_war will be installed if this is true
+#
+# war_location = '\somelocation\artifactory.war'
+#   The war that will be managed if $managed_war is set to true.
+#
+
 class artifactory::config(
   $version      = '3.2.0',
   $destination  = '/opt',
@@ -33,6 +41,8 @@ class artifactory::config(
   $port         = 8081,
   $manage_java  = true,
   $java_package = 'openjdk-7-jre',
+  $manage_war   = false,
+  $war_location = '',
 ) {
 
 }

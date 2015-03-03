@@ -10,7 +10,7 @@ class artifactory::install inherits artifactory::config {
 
   $neededPackages = [ 'wget', 'unzip' ]
   $downloadFile   = "artifactory-${version}.zip"
-  $downloadUrl    = "http://downloads.sourceforge.net/project/artifactory/artifactory/${version}/${downloadFile}"
+  $downloadUrl    = "https://bintray.com/artifact/download/jfrog/artifactory/${downloadFile}"
   $downloadPath   = '/tmp'
 
   package { $neededPackages :
@@ -22,7 +22,7 @@ class artifactory::install inherits artifactory::config {
       ensure => installed,
     }
   }
-
+  
   exec { "download-artifactory-${version}-archive-zip" :
     command => "wget ${downloadUrl}",
     cwd     => $downloadPath,
@@ -39,13 +39,13 @@ class artifactory::install inherits artifactory::config {
   }
 
   # patch the broken installService.sh to allow changing the user
-  file { "${destination}/artifactory-${version}/bin/installService.sh" : 
+  file { "${destination}/artifactory-${version}/bin/installService.sh" :
     source  => "puppet:///modules/${module_name}/installService.sh",
     require => Exec["extract-artifactory-${version}-archive"],
   }
 
   # update contents of included server.xml to allow changing the port
-  file { "${destination}/artifactory-${version}/tomcat/conf/server.xml" : 
+  file { "${destination}/artifactory-${version}/tomcat/conf/server.xml" :
     content => template("${module_name}/server.xml.erb"),
     require => Exec["extract-artifactory-${version}-archive"],
   }
@@ -53,8 +53,8 @@ class artifactory::install inherits artifactory::config {
   group { $group :
     ensure => present,
   }
-  
-  user { $user : 
+
+  user { $user :
     ensure     => present,
     managehome => false,
     gid        => $group,
@@ -65,11 +65,22 @@ class artifactory::install inherits artifactory::config {
     owner   => $user,
     group   => $group,
     recurse => true,
-    require => [ 
+    require => [
       Exec["extract-artifactory-${version}-archive"],
       User[$user],
       Group[$group],
     ]
+  }
+
+  if( $manage_war )
+  {
+    file { "${destination}/artifactory-${version}/webapps/artifactory.war" :
+      ensure => present,
+      purge  => true,
+      owner  => $user,
+      group  => $group,
+      source => $war_location,
+    }
   }
 
   exec { "run-artifactory-${version}-install-script" :
