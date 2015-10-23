@@ -39,10 +39,10 @@ class artifactory::install inherits artifactory::config {
   }
 
   # patch the broken installService.sh to allow changing the user
-  file { "${destination}/artifactory-oss-${version}/bin/installService.sh" : 
-    source  => "puppet:///modules/${module_name}/installService.sh",
-    require => Exec["extract-artifactory-${version}-archive"],
-  }
+  # file { "${destination}/artifactory-oss-${version}/bin/installService.sh" : 
+  #   source  => "puppet:///modules/${module_name}/installService.sh",
+  #   require => Exec["extract-artifactory-${version}-archive"],
+  # }
 
   # update contents of included server.xml to allow changing the port
   file { "${destination}/artifactory-oss-${version}/tomcat/conf/server.xml" : 
@@ -75,7 +75,7 @@ class artifactory::install inherits artifactory::config {
   exec { "run-artifactory-${version}-install-script" :
     command => "${destination}/artifactory-oss-${version}/bin/installService.sh $user",
     creates => '/etc/init.d/artifactory',
-    require => File["${destination}/artifactory-oss$-{version}"],
+    require => File["${destination}/artifactory-oss-${version}"],
   }
 
 }
