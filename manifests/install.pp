@@ -27,25 +27,25 @@ class artifactory::install inherits artifactory::config {
     command => "wget ${downloadUrl}",
     cwd     => $downloadPath,
     creates => "${downloadPath}/${downloadFile}",
-    onlyif  => "test ! -d ${destination}/artifactory-${version}",
+    onlyif  => "test ! -d ${destination}/artifactory-oss-${version}",
     require => Package['wget'],
   }
 
   exec { "extract-artifactory-${version}-archive" :
     command => "unzip ${downloadFile} -d ${destination}",
     cwd     => $downloadPath,
-    creates => "${destination}/artifactory-${version}",
+    creates => "${destination}/artifactory-oss-${version}",
     require => [ Package['unzip'], Exec["download-artifactory-${version}-archive-zip"] ],
   }
 
   # patch the broken installService.sh to allow changing the user
-  file { "${destination}/artifactory-${version}/bin/installService.sh" : 
+  file { "${destination}/artifactory-oss-${version}/bin/installService.sh" : 
     source  => "puppet:///modules/${module_name}/installService.sh",
     require => Exec["extract-artifactory-${version}-archive"],
   }
 
   # update contents of included server.xml to allow changing the port
-  file { "${destination}/artifactory-${version}/tomcat/conf/server.xml" : 
+  file { "${destination}/artifactory-oss-${version}/tomcat/conf/server.xml" : 
     content => template("${module_name}/server.xml.erb"),
     require => Exec["extract-artifactory-${version}-archive"],
   }
@@ -60,7 +60,7 @@ class artifactory::install inherits artifactory::config {
     gid        => $group,
   }
 
-  file { "${destination}/artifactory-${version}" :
+  file { "${destination}/artifactory-oss-${version}" :
     ensure  => present,
     owner   => $user,
     group   => $group,
@@ -73,9 +73,9 @@ class artifactory::install inherits artifactory::config {
   }
 
   exec { "run-artifactory-${version}-install-script" :
-    command => "${destination}/artifactory-${version}/bin/installService.sh $user",
+    command => "${destination}/artifactory-oss-${version}/bin/installService.sh $user",
     creates => '/etc/init.d/artifactory',
-    require => File["${destination}/artifactory-${version}"],
+    require => File["${destination}/artifactory-oss$-{version}"],
   }
 
 }
