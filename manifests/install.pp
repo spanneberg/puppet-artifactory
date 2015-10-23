@@ -9,8 +9,8 @@ class artifactory::install inherits artifactory::config {
   }
 
   $neededPackages = [ 'wget', 'unzip' ]
-  $downloadFile   = "artifactory-${version}.zip"
-  $downloadUrl    = "http://downloads.sourceforge.net/project/artifactory/artifactory/${version}/${downloadFile}"
+  $downloadFile   = "jfrog-artifactory-oss-${version}.zip"
+  $downloadUrl    = "https://bintray.com/artifact/download/jfrog/artifactory/${downloadFile}"
   $downloadPath   = '/tmp'
 
   package { $neededPackages :
